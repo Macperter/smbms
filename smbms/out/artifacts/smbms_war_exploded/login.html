@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./js/jquery-3.5.1.js"></script>
+</head>
+<body>
+<center>
+    <div>
+        <ul style="list-style: none">
+            <li>账号:<input type="text" name="id"></li>
+            <li>密码:<input type="password" name="password"></li>
+            <li><input type="button" value="提交" onclick="g()"></li>
+        </ul>
+    </div>
+    <div style="color: red;display: none" id = "msg"></div>
+</center>
+
+
+</body>
+<script>
+    function show(text) {
+        let p = $('#msg');
+        p.text(text);
+        p.show();
+        setTimeout(function () {
+            p.hide();
+        },3000);
+
+
+    }
+    function g() {
+        $.ajax({
+            url:"./login",
+            type:"post",
+            data:$('input:eq(0)').attr('name') + '=' +$('input:eq(0)').val()+'&'
+                +$('input:eq(1)').attr('name') + '=' +$('input:eq(1)').val(),
+            success : function (data,stus,xhr) {
+                let t = xhr.responseText;
+                if (t==="no"){
+                    show("登录失败，请检查账号密码");
+                }else if(t==="data miss")
+                    show(t);
+                else
+                    window.location = t;
+            },
+            error:function (XMLHttpRequest, textStatus, errorThrown) {
+                show('oops!出错了');
+                // 通常 textStatus 和 errorThrown 之中
+                // 只有一个会包含信息
+                //this; // 调用本次AJAX请求时传递的options参数
+            }
+        });
+    }
+</script>
+</html>
